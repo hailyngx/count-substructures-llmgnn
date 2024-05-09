@@ -1,0 +1,45 @@
+Prompt:
+This graph has 30 nodes and 90 edges. The edges are as follows: (13, 22) (13, 26) (13, 12) (13, 2) (13, 27) (22, 13) (22, 16) (22, 28) (22, 20) (5, 27) (9, 2) (9, 16) (9, 23) (10, 18) (11, 23) (11, 19) (11, 18) (4, 23) (4, 6) (8, 2) (8, 1) (7, 19) (7, 14) (12, 13) (12, 19) (2, 13) (2, 9) (2, 8) (2, 24) (21, 28) (21, 25) (21, 17) (28, 22) (28, 21) (28, 14) (28, 23) (26, 13) (26, 24) (26, 20) (26, 25) (1, 8) (1, 29) (1, 27) (17, 21) (17, 6) (17, 0) (17, 15) (24, 2) (24, 26) (24, 19) (24, 29) (0, 17) (0, 25) (23, 9) (23, 11) (23, 4) (23, 28) (18, 10) (18, 11) (29, 1) (29, 24) (29, 6) (6, 4) (6, 17) (6, 29) (6, 3) (19, 11) (19, 7) (19, 12) (19, 24) (3, 6) (3, 14) (14, 7) (14, 28) (14, 3) (14, 15) (20, 22) (20, 26) (15, 17) (15, 14) (25, 21) (25, 26) (25, 0) (25, 16) (16, 22) (16, 9) (16, 25) (27, 13) (27, 5) (27, 1) 
+
+Response:
+The Degree-Based Ordering method first requires us to sort the vertices by their number of connections from least to most:
+
+0: 2 connections
+3: 2 connections
+5: 1 connection
+7: 2 connections
+10: 1 connection
+12: 2 connections
+15: 2 connections
+17: 4 connections
+18: 2 connections
+20: 2 connections
+21: 3 connections
+4: 4 connections
+6: 4 connections
+8: 4 connections
+11: 4 connections
+19: 4 connections
+22: 4 connections
+24: 4 connections
+26: 4 connections
+29: 4 connections
+1: 5 connections
+9: 5 connections
+14: 5 connections
+23: 5 connections
+16: 5 connections
+25: 5 connections
+27: 5 connections
+13: 6 connections
+28: 6 connections
+
+Now, let's count the triangles using the Degree-Based Ordering method:
+
+1. Edge (13, 22): Both 13 and 22 have 6 connections (max connections), so we skip this edge.
+2. Edge (13, 26): Both 13 and 26 have 6 connections (max connections), so we skip this edge.
+3. Edge (13, 12): Both 13 and 12 have 6 connections (max connections), so we skip this edge.
+4. Edge (13, 2): 13 has 6 connections, and 2 has 5 connections. Shared connections: 8, 24. Triangle: <2, 13, 24>.
+5. Edge (13, 27): 13 has 6 connections, and 27 has 5 connections. Shared connections: 1. Triangle: <1, 13, 27>.
+
+[Total number of triangles: 2]

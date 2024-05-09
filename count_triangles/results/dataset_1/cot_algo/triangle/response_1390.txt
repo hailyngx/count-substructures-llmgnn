@@ -1,0 +1,62 @@
+Prompt:
+This graph has 10 nodes and 42 edges. The edges are as follows: (0, 1) (0, 3) (0, 4) (0, 8) (0, 9) (1, 0) (1, 3) (1, 4) (2, 4) (2, 6) (3, 0) (3, 1) (3, 6) (3, 7) (3, 8) (3, 9) (4, 0) (4, 1) (4, 2) (4, 5) (4, 6) (4, 9) (5, 4) (5, 7) (5, 8) (5, 9) (6, 2) (6, 3) (6, 4) (7, 3) (7, 5) (7, 8) (7, 9) (8, 0) (8, 3) (8, 5) (8, 7) (9, 0) (9, 3) (9, 4) (9, 5) (9, 7) 
+
+Response:
+The Degree-Based Ordering method involves sorting the vertices by their degrees:
+
+Vertices: 
+0 - Degree 5
+1 - Degree 3
+2 - Degree 2
+3 - Degree 6
+4 - Degree 6
+5 - Degree 4
+6 - Degree 4
+7 - Degree 4
+8 - Degree 4
+9 - Degree 5
+
+Since vertex 2 has the lowest degree, it will be relabeled as 0. 
+Vertices: 
+2 -> 0
+1 -> 1
+5 -> 2
+6 -> 3
+7 -> 4
+8 -> 5
+9 -> 6
+0 -> 7
+3 -> 8
+4 -> 9
+
+The relabeled edges: 
+(0, 1) (0, 7) (0, 9) (0, 5) (0, 6) (1, 0) (1, 7) (1, 9) (2, 0) (2, 3) (3, 0) (3, 1) (3, 4) (3, 5) (3, 6) (3, 7) (4, 0) (4, 1) (4, 2) (4, 8) (4, 3) (4, 6) (5, 0) (5, 2) (5, 4) (5, 6) (5, 7) (6, 2) (6, 3) (6, 4) (7, 0) (7, 1) (7, 5) (7, 8) (8, 0) (8, 4) (8, 5) (8, 7) (9, 0) (9, 1) (9, 4) (9, 5) (9, 7)
+
+We can now count the number of triangles. 
+
+Total number of triangles: [24]
+
+Unique triangles: 
+<0, 1, 7>
+<0, 3, 5>
+<0, 4, 9>
+<1, 7, 9>
+<3, 4, 6>
+<3, 4, 9>
+<3, 5, 7>
+<5, 7, 9>
+<0, 5, 7>
+<0, 6, 9>
+<2, 3, 6>
+<2, 3, 4>
+<2, 4, 6>
+<0, 4, 6>
+<2, 3, 7>
+<2, 6, 7>
+<0, 3, 4>
+<1, 4, 9>
+<2, 6, 3>
+<0, 1, 9>
+<2, 0, 3>
+<2, 0, 4>
+<0, 1, 3>

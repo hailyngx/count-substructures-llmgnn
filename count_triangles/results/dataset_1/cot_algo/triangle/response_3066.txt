@@ -1,0 +1,35 @@
+Prompt:
+This graph has 10 nodes and 32 edges. The edges are as follows: (1, 3) (1, 6) (1, 7) (1, 8) (1, 9) (2, 4) (2, 8) (3, 1) (3, 4) (3, 5) (3, 6) (3, 8) (3, 9) (4, 2) (4, 3) (4, 9) (5, 3) (5, 8) (6, 1) (6, 3) (7, 1) (7, 8) (7, 9) (8, 1) (8, 2) (8, 3) (8, 5) (8, 7) (9, 1) (9, 3) (9, 4) (9, 7) 
+
+Response:
+Given graph in the form of an edge list:
+
+(1, 3) (1, 6) (1, 7) (1, 8) (1, 9) 
+(2, 4) (2, 8) 
+(3, 1) (3, 4) (3, 5) (3, 6) (3, 8) (3, 9) 
+(4, 2) (4, 3) (4, 9) 
+(5, 3) (5, 8) 
+(6, 1) (6, 3) 
+(7, 1) (7, 8) (7, 9) 
+(8, 1) (8, 2) (8, 3) (8, 5) (8, 7) 
+(9, 1) (9, 3) (9, 4) (9, 7) 
+
+Now, we will perform the Degree-Based Ordering method to count the number of triangles in the graph.
+Sorting vertices by their number of connections:
+
+Node 2 : degree 1 
+Node 5 : degree 1 
+Node 6 : degree 2 
+Node 4 : degree 3 
+Node 7 : degree 3 
+Node 9 : degree 4 
+Node 5 : degree 5 
+Node 1 : degree 5 
+Node 3 : degree 6 
+Node 8 : degree 6 
+
+
+Now, we will count the triangles using the sorted order and the given edge list:
+Triangles: <1, 3, 6>, <1, 3, 8>, <1, 6, 8>, <1, 7, 8>, <1, 7, 9>, <3, 4, 9>, <3, 5, 8>, <3, 6, 9>, <3, 7, 9>, <8, 7, 9>
+
+Total number of triangles: [10]
