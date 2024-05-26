@@ -11,7 +11,7 @@ def count_data_to_tg(dataset_num=1, task='star'):
     ['star', 'triangle', 'tailed_triangle', 'chordal_cycle', 'attributed_triangle'] """
     # NOTE: only correct for unattributed right now
     
-    dataset_path = './count_experiments/data/'
+    dataset_path = '../count_experiments/data/'
     dataset_prefix = 'dataset' + str(dataset_num)
     glist, all_labels = load_graphs(dataset_path + dataset_prefix + '.bin')
     graphs = glist
@@ -58,31 +58,3 @@ def count_data_to_tg(dataset_num=1, task='star'):
         
     return train_tg_list, val_tg_list, test_tg_list, variance
 
-# print(count_data_to_tg(dataset_num=1, task='star'))
-
-# def generate_graph_connections_description(glist):
-#     connections_descriptions = []
-
-#     for graph in glist:
-#         edge_index = graph.edges()
-#         connections = []
-
-#         for src, dst in zip(edge_index[0].numpy(), edge_index[1].numpy()):
-#             connections.append(f"Node {src} is connected to Node {dst}")
-
-#         connections_descriptions.append(connections)
-
-#     return connections_descriptions
-
-# # Example usage
-# dataset_path = './count_experiments/data/'
-# dataset_prefix = 'dataset' + str(1)  # Example dataset number
-# glist, _ = load_graphs(dataset_path + dataset_prefix + '.bin')
-
-# # Generate connections description for each graph in glist
-# all_connections = generate_graph_connections_description(glist)
-
-# # Print connections for the first graph as an example
-# print("Connections in the first graph:")
-# for connection in all_connections[0]:
-#     print(connection)

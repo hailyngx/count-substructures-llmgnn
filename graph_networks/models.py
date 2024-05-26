@@ -24,8 +24,6 @@ class GIN(nn.Module):
 
     def forward(self, data):
         x, edge_index, batch = data.x, data.edge_index, data.batch
-        # print(x)
-        # print(edge_index)
 
         xs = []
         for conv in self.convs:
@@ -46,7 +44,7 @@ class GIN(nn.Module):
 
 class GCN(nn.Module):
     # TODO: implement batch norm
-    def __init__(self, in_channels, dim, out_channels, use_dropout=True, use_jk=True):
+    def __init__(self, in_channels, dim, out_channels, use_dropout=True, use_jk=True, use_bn=True):
         super(GCN, self).__init__()
 
         self.conv1 = GCNConv(in_channels, dim)
@@ -57,6 +55,13 @@ class GCN(nn.Module):
         
         self.use_dropout=use_dropout
         self.use_jk = use_jk
+        self.use_bn = use_bn
+
+        if self.use_bn:
+            self.bns = nn.ModuleList([nn.BatchNorm1d(dim) for _ in range(4)])
+        else:
+            self.bns = [None] * 4
+
         if self.use_jk:
             self.jump = JumpingKnowledge('cat')
             self.lin1 = Linear(4*dim, dim)
@@ -69,6 +74,8 @@ class GCN(nn.Module):
         xs = []
         for conv in self.convs:
             x = conv(x, edge_index)
+            if self.use_bn:
+                x = self.bns[i](x)
             x = F.relu(x)
             xs += [x]
         if self.use_jk:

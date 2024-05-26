@@ -10,6 +10,8 @@ from load_count_data import count_data_to_tg
 from models import GIN, GCN
 from rnpgnn import RNPGNN
 
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+
 def train(train_loader, model, criterion, device, optimizer, scheduler=None):
     model.train()
     total_loss = 0
@@ -28,24 +30,50 @@ def train(train_loader, model, criterion, device, optimizer, scheduler=None):
     return np.mean(epoch_loss)
 
 @torch.no_grad()
-def test(loader, model, criterion, device):
+def test(loader, model, criterion, device, variance):
     model.eval()
     total_err = 0
     epoch_loss = []
+
+
+    # benchmarks
+    total_mae = 0
+    total_mse = 0
+    total_correct = 0
+    total_examples = 0
+
     for data in loader:
         data = data.to(device)
         output = model(data).flatten()
         loss = criterion(output, data.y)
         epoch_loss.append(loss.detach().item())
         #total_err += criterion(output, data.y)
+
+        # Compute MSE and MAE
+        mse = mean_squared_error(data.y.cpu().numpy(), output.cpu().numpy())
+        mae = mean_absolute_error(data.y.cpu().numpy(), output.cpu().numpy())
+        total_mse += mse * data.num_graphs
+        total_mae += mae * data.num_graphs
         
+        # Compute accuracy
+        correct = (output.round() == data.y).sum().item()
+        total_correct += correct
+        total_examples += data.num_graphs
+
+    avg_mse = total_mse / total_examples
+    avg_mae = total_mae / total_examples
+    accuracy = total_correct / total_examples
+    
+    mse_div_variance = avg_mse / variance
+    return np.mean(epoch_loss), avg_mae, mse_div_variance, accuracy
+
     #return total_err / len(loader.dataset)
-    return np.mean(epoch_loss)
+    # return np.mean(epoch_loss)
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--task', type=str, default='triangle')
-    parser.add_argument('--dataset_num', type=int, default=1)
+    parser.add_argument('--task', type=str, default='chordal_cycle')
+    parser.add_argument('--dataset_num', type=int, default=2)
     parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--max_graphs', type=int, default=5000)
     parser.add_argument('--hidden_channels', type=int, default=32)
@@ -79,7 +107,7 @@ def main():
     if args.model == 'gin':
         model = GIN(1, args.hidden_channels, 1, use_bn=args.use_bn, use_dropout=False, use_jk=False).to(device)
     elif args.model == 'gcn':
-        model = GCN(1, args.hidden_channels, 1, use_bn=args.use_bn, use_dropout=True).to(device)
+        model = GCN(1, args.hidden_channels, 1, use_bn=args.use_bn, use_dropout=False).to(device)
     elif args.model == 'rnpgnn':
         r = tuple(int(rk) for rk in args.rparams.split('-'))
         model = RNPGNN(r, 1, args.hidden_channels, 1, num_layers=args.num_layers, num_mlp_layers=args.num_mlp_layers, use_bn=args.use_bn, use_ln=args.use_ln, dropout=args.dropout).to(device)
@@ -100,12 +128,13 @@ def main():
     for epoch in range(1, args.epochs+1):
         start_time = time.time()
         loss = train(train_loader, model, criterion, device, optimizer, scheduler=scheduler)
-        train_err = test(train_loader, model, criterion,  device) / variance
-        val_err = test(val_loader, model, criterion,  device) / variance
-        test_err = test(test_loader, model, criterion,  device) / variance
+        train_err, train_mae, train_mse_div_variance, train_acc = test(train_loader, model, criterion,  device, variance) 
+        val_err, val_mae, val_mse_div_variance, val_acc = test(val_loader, model, criterion,  device, variance) 
+        test_err, test_mae, test_mse_div_variance, test_acc = test(test_loader, model, criterion,  device, variance) 
         if epoch % 1 == 0:
-            print(f'Epoch: {epoch:3d}, Loss: {loss:.4f}, Train Err: {train_err:.5f} ',
-                  f'Test Err: {test_err:.5f},', f'Time: {time.time()-start_time:.3f}')
+            print(f'Epoch: {epoch:3d}, Loss: {loss:.4f}, Train MSE/Var: {train_mse_div_variance:.5f}, Train MAE: {train_mae:.5f}, Train Acc: {train_acc:.5f} ',
+                  f'Val MSE/Var: {val_mse_div_variance:.5f}, Val MAE: {val_mae:.5f}, Val Acc: {val_acc:.5f} ',
+                  f'Test MSE/Var: {test_mse_div_variance:.5f}, Test MAE: {test_mae:.5f}, Test Acc: {test_acc:.5f}, Time: {time.time()-start_time:.3f}')
         total_time += time.time()-start_time
     print('Total time:', total_time)
     print('Time per epoch:', total_time/args.epochs)
