@@ -1,4 +1,4 @@
-# Can Large Language Models Count Substructures?
+# Evaluating the Structural Awareness of Large Language Models on Graphs: Can They Count Substructures?
 
 ## Environment Setup
 ```
